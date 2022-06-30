@@ -14,6 +14,11 @@ const productsService = {
     }
     return product;
   },
+  async add(name) {
+    const productId = await productsModel.add(name);
+    const product = await productsModel.getById(productId);
+    return product;
+  },
 };
 
 module.exports = productsService;
