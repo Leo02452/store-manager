@@ -12,7 +12,7 @@ const productsController = {
     res.status(200).json(product);
   },
   async add(req, res) {
-    const { name } = req.body;
+    const { name } = await productsService.validateBodyAdd(req.body);
     const product = await productsService.add(name);
     res.status(201).json(product);
   },
