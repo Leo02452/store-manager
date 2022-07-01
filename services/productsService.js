@@ -1,7 +1,13 @@
+const Joi = require('joi');
 const productsModel = require('../models/productsModel');
-const NotFoundError = require('./errors');
+const NotFoundError = require('./notFoundError');
+const { runSchema } = require('./validationError');
 
 const productsService = {
+  validateBodyAdd: runSchema(Joi.object({
+    name: Joi.string().required().min(5),
+  })),
+
   async list() {
     const productsList = await productsModel.list();
     return productsList;
