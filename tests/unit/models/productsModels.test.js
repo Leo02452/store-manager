@@ -63,4 +63,13 @@ describe('models/productsModel', () => {
       expect(product).to.be.a('number');
     });
   });
+  describe('update', () => {
+    it('should return a number', async () => {
+      const affectedRows = 1;
+      sinon.stub(db, 'query').resolves([{ affectedRows }]);
+
+      const result = await productsModel.update(1, "Traje do pantera");
+      expect(result).to.be.equal(true);
+    });
+  });
 });
