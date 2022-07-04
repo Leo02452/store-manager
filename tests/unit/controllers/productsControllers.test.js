@@ -3,7 +3,6 @@ const sinon = require('sinon');
 const chaiAsPromised = require('chai-as-promised');
 const productsService = require('../../../services/productsService');
 const productsController = require('../../../controllers/productsController');
-const NotFoundError = require('../../../services/notFoundError');
 
 use(chaiAsPromised);
 
@@ -12,8 +11,8 @@ beforeEach(() => {
 });
 
 describe('controllers/productsController', () => {
-  describe('list should return status code', () => {
-    it('200 and a list of products', async () => {
+  describe('list', () => {
+    it('should return status code 200 and a list of products', async () => {
       const req = {};
       const res = {};
 
@@ -43,7 +42,7 @@ describe('controllers/productsController', () => {
     });
   });
   describe('getById', () => {
-    it('200 when id is valid', async () => {
+    it('should return status code 200 when id is valid', async () => {
       const req = {};
       const res = {};
 
@@ -58,18 +57,58 @@ describe('controllers/productsController', () => {
       expect(res.status.calledWith(200)).to.be.equal(true);
       expect(res.json.calledWith({ "id": 1, "name": "Martelo de Thor" })).to.be.equal(true);
     });
-    it('404 when id is invalid', async () => {
+  });
+  describe('add', () => {
+    it('should return status code 201 when name is valid', async () => {
       const req = {};
       const res = {};
 
       res.status = sinon.stub().returns(res);
       res.json = sinon.stub();
 
-      req.params = { id: 'claudio' };
+      req.body = { "name": "Cinto do Batman" };
 
-      sinon.stub(productsService, 'getById').resolves(undefined);
+      const createdProduct = { "id": 4, "name": "Cinto do Batman" };
+      sinon.stub(productsService, 'add').resolves(createdProduct);
 
-      expect(productsController.getById(req, res)).to.be.rejectedWith(NotFoundError);
+      await productsController.add(req, res);
+
+      expect(res.status.calledWith(201)).to.be.equal(true);
+      expect(res.json.calledWith({ "id": 4, "name": "Cinto do Batman" })).to.be.equal(true);
+    });
+  //   it('422 when name is less than 5 characters', async () => {
+  //     const req = {};
+  //     const res = {};
+
+  //     res.status = sinon.stub().returns(res);
+  //     res.json = sinon.stub();
+
+  //     req.body = { "name": "Céu" };
+
+  //     // const createdProduct = { "id": 4, "name": "Cinto do Batman" };
+  //     // sinon.stub(productsService, 'add').resolves(createdProduct);
+
+  //     return expect(productsController.add(req, res)).to.be.rejectedWith('ValidationError');
+  //   });
+  });
+  describe('update', () => {
+    it('should return status code 200 when name is valid', async () => {
+      const req = {};
+      const res = {};
+
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub();
+
+      req.params = { "id": 1 }
+      req.body = { "name": "Traje do Pantera" };
+      const updatedProduct = { "id": 1, "name": "Traje do Pantera" };
+
+      sinon.stub(productsService, 'update').resolves(updatedProduct);
+
+      await productsController.update(req, res);
+
+      expect(res.status.calledWith(200)).to.be.equal(true);
+      expect(res.json.calledWith(updatedProduct)).to.be.equal(true);
     });
   });
 });
