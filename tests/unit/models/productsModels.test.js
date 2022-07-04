@@ -54,4 +54,13 @@ describe('models/productsModel', () => {
       expect(product.name).to.be.equal('Martelo de Thor');
     });
   });
+  describe('add', () => {
+    it('should return a number', async () => {
+      const insertId = 4;
+      sinon.stub(db, 'query').resolves([{ insertId }]);
+
+      const product = await productsModel.add({ "name": "Cinto do Batman" });
+      expect(product).to.be.a('number');
+    });
+  });
 });
