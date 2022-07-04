@@ -43,7 +43,21 @@ describe('services/productsService', () => {
       const product = await productsService.getById(1);
       expect(product).to.be.a('object');
     });
-    it('should throw an error when id is not found', async () => {
+  describe('add', () => {
+    it('should return a object', async () => {
+      const insertId = 4;
+      sinon.stub(productsModel, 'add').resolves(insertId);
+
+      const result = { "id": 4, "name": "Cinto do Batman" };
+      sinon.stub(productsModel, 'getById').resolves(result);
+
+      const product = await productsService.add({ "name": "Cinto do Batman" });
+      expect(product).to.be.a('object');
+    });
+    // it('should throw error when name is less than 5 characters', () => {
+    //   return expect(productsService.validateBodyAdd({ name: "Céu" })).to.be.rejectedWith("name length must be at least 5 characters long");
+    // });
+  });
       sinon.stub(productsModel, 'getById').resolves(undefined);
 
       expect(productsService.getById(88)).to.be.rejectedWith(NotFoundError);
