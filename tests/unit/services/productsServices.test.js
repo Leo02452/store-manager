@@ -4,6 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 const productsModel = require('../../../models/productsModel');
 const productsService = require('../../../services/productsService');
 const NotFoundError = require('../../../services/notFoundError');
+const { ValidationError } = require('joi');
 
 use(chaiAsPromised);
 
@@ -43,6 +44,12 @@ describe('services/productsService', () => {
       const product = await productsService.getById(1);
       expect(product).to.be.a('object');
     });
+    it('should throw an error when productId is not found', async () => {
+      sinon.stub(productsModel, 'getById').resolves(undefined);
+
+      return expect(productsService.getById(0)).to.be.rejectedWith(NotFoundError);
+    });
+  });
   describe('add', () => {
     it('should return a object', async () => {
       const insertId = 4;
