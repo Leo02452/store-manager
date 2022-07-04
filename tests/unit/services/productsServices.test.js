@@ -58,9 +58,19 @@ describe('services/productsService', () => {
     //   return expect(productsService.validateBodyAdd({ name: "Céu" })).to.be.rejectedWith("name length must be at least 5 characters long");
     // });
   });
+  describe('update', () => {
+    it('should return a object', async () => {
+      sinon.stub(productsModel, 'getById').resolves({ "id": 1, "name": "Martelo de Thor" });
+      const affectedRows = 1;
+      sinon.stub(productsModel, 'update').resolves(affectedRows);
+
+      const product = await productsService.update({ "id": 1, "name": "Traje do Pantera" });
+      expect(product).to.be.a('object');
+    });
+    it('should throw an error when productId is not found', async () => {
       sinon.stub(productsModel, 'getById').resolves(undefined);
 
-      expect(productsService.getById(88)).to.be.rejectedWith(NotFoundError);
+      return expect(productsService.update(0)).to.be.rejectedWith(NotFoundError);
     });
   });
 });
