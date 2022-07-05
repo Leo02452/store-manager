@@ -1,6 +1,7 @@
 const express = require('express');
 require('express-async-errors');
 const productsRouter = require('./routes/productsRouter');
+const salesRouter = require('./routes/salesRouter');
 
 const app = express();
 app.use(express.json());
@@ -11,6 +12,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productsRouter);
+
+app.use('/sales', salesRouter);
 
 app.use((err, _req, res, _next) => {
   switch (err.name) {
