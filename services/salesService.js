@@ -25,6 +25,12 @@ const salesService = {
     const saleId = await salesModel.add(sales);
     return { id: saleId, itemsSold: sales };
   },
+  async checkIfExists(id) {
+    const exists = await salesModel.exists(id);
+    if (!exists.length) {
+      throw new NotFoundError('Sale not found');
+    }
+  },
 };
 
 module.exports = salesService;
