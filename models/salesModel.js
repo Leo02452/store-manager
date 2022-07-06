@@ -30,6 +30,21 @@ const salesModel = {
     const [sale] = await db.query(query, [id]);
     return sale;
   },
+  async add(sales) {
+    const firstInsertQuery = `
+      INSERT INTO
+        StoreManager.sales (date)
+      VALUES (NOW());
+      `;
+    const [{ insertId }] = await db.query(firstInsertQuery);
+    const secondInsertQuery = sales.map(({ productId, quantity }) => `
+        INSERT INTO
+          StoreManager.sales_products (sale_id, product_id, quantity)
+        VALUES (${insertId}, ${productId}, ${quantity});
+      `);
+    await Promise.all(secondInsertQuery);
+    return insertId;
+  },
 };
 
 module.exports = salesModel;
