@@ -25,6 +25,9 @@ const salesService = {
     const saleId = await salesModel.add(sales);
     return { id: saleId, itemsSold: sales };
   },
+  async remove(id) {
+    await salesModel.remove(id);
+  },
   async checkIfExists(id) {
     const exists = await salesModel.exists(id);
     if (!exists.length) {
