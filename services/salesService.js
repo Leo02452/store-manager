@@ -15,10 +15,6 @@ const salesService = {
   },
   async getById(id) {
     const sale = await salesModel.getById(id);
-    if (!sale.length) {
-      const error = new NotFoundError('Sale not found');
-      throw error;
-    }
     return sale;
   },
   async add(sales) {

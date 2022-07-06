@@ -9,8 +9,9 @@ const salesController = {
 
   async getById(req, res) {
     const { id } = req.params;
-    const product = await salesService.getById(id);
-    res.status(200).json(product);
+    await salesService.checkIfExists(id);
+    const sales = await salesService.getById(id);
+    res.status(200).json(sales);
   },
   async add(req, res) {
     const sales = req.body;
