@@ -45,6 +45,11 @@ const salesModel = {
     await Promise.all(secondInsertQuery);
     return insertId;
   },
+  async exists(id) {
+    const query = 'SELECT 1 FROM StoreManager.sales WHERE id = ?';
+    const [sale] = await db.query(query, [id]);
+    return sale;
+  },
 };
 
 module.exports = salesModel;
