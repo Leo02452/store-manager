@@ -1,10 +1,10 @@
 const runSchema = (schema) => (data) => {
   const { error, value } = schema.validate(data);
   if (error) {
-    const { details } = error;
-    error.message = details[0].message;
-    switch (details[0].type) {
+    error.message = error.details[0].message;
+    switch (error.details[0].type) {
       case 'string.min':
+      case 'number.min':
         error.code = 422;
         break;
       case 'any.required':
