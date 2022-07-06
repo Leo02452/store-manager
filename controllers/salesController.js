@@ -25,6 +25,12 @@ const salesController = {
     const saleInfo = await salesService.add(sales);
     res.status(201).json(saleInfo);
   },
+  async remove(req, res) {
+    const { id } = req.params;
+    await salesService.checkIfExists(id);
+    await salesService.remove(id);
+    res.status(204).end();
+  },
 };
 
 module.exports = salesController;
