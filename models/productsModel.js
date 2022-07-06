@@ -26,6 +26,11 @@ const productsModel = {
     const [{ affectedRows }] = await db.query(query, [id]);
     return Boolean(affectedRows);
   },
+  async exists(id) {
+    const query = 'SELECT 1 FROM StoreManager.products WHERE id = ?';
+    const [product] = await db.query(query, [id]);
+    return product;
+  },
 };
 
 module.exports = productsModel;
