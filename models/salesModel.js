@@ -54,6 +54,19 @@ const salesModel = {
     `;
     await db.query(query, [id]);
   },
+  async update(quantity, saleId, productId) {
+    const query = `
+      UPDATE
+        StoreManager.sales_products
+      SET
+        quantity = ?
+      WHERE
+        sale_id = ?
+        AND product_id = ?;
+    `;
+    const [{ affectedRows }] = await db.query(query, [quantity, saleId, productId]);
+    return affectedRows;
+  },
   async exists(id) {
     const query = 'SELECT 1 FROM StoreManager.sales WHERE id = ?';
     const [sale] = await db.query(query, [id]);
