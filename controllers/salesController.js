@@ -32,6 +32,21 @@ const salesController = {
     await salesService.remove(id);
     res.status(204).end();
   },
+  async update(req, res) {
+    const { id } = req.params;
+    const sales = req.body;
+
+    await salesService.checkIfExists(id);
+    const bodyPromises = sales.map((sale) => salesService.validateBodyAdd(sale));
+    const validatedSales = await Promise.all(bodyPromises);
+
+    const checkPromises = validatedSales
+      .map(({ productId }) => productsService.checkIfExists(productId));
+    await Promise.all(checkPromises);
+
+    const updatedSale = await salesService.update(id, sales);
+    res.status(200).json(updatedSale);
+  },
 };
 
 module.exports = salesController;
