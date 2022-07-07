@@ -4,7 +4,7 @@ const NotFoundError = require('./notFoundError');
 const { runSchema } = require('./validationError');
 
 const salesService = {
-  validateBodyAdd: runSchema(Joi.object({
+  validateBody: runSchema(Joi.object({
     quantity: Joi.number().required().min(1),
     productId: Joi.number().required(),
   })),

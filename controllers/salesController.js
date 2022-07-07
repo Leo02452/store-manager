@@ -16,7 +16,7 @@ const salesController = {
   async add(req, res) {
     const sales = req.body;
 
-    const bodyPromises = sales.map((sale) => salesService.validateBodyAdd(sale));
+    const bodyPromises = sales.map((sale) => salesService.validateBody(sale));
     const validatedSales = await Promise.all(bodyPromises);
 
     const promises = validatedSales
@@ -37,7 +37,7 @@ const salesController = {
     const sales = req.body;
 
     await salesService.checkIfExists(id);
-    const bodyPromises = sales.map((sale) => salesService.validateBodyAdd(sale));
+    const bodyPromises = sales.map((sale) => salesService.validateBody(sale));
     const validatedSales = await Promise.all(bodyPromises);
 
     const checkPromises = validatedSales
