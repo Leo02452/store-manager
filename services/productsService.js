@@ -20,6 +20,10 @@ const productsService = {
     }
     return product;
   },
+  async getByName(searchTerm) {
+    const products = await productsModel.getByName(searchTerm);
+    return products;
+  },
   async add(name) {
     const productId = await productsModel.add(name);
     const product = await productsModel.getById(productId);
