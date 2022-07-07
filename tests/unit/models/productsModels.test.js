@@ -3,13 +3,12 @@ const sinon = require('sinon');
 const productsModel = require('../../../models/productsModel');
 const db = require('../../../models/db');
 
-beforeEach(() => {
-  sinon.restore();
-});
 
 describe('models/productsModel', () => {
+  beforeEach(sinon.restore);
+
   describe('list', () => {
-    it('should return a list of products', async () => {
+    it('should return a list of products when db.query returns a list', () => {
       const result = [
         {
           "id": 1,
@@ -26,9 +25,12 @@ describe('models/productsModel', () => {
       ];
 
       sinon.stub(db, 'query').resolves([result]);
-      const productsList = await productsModel.list();
-      expect(productsList).to.be.a('array');
-      expect(productsList.length).to.be.equal(3);
+
+      return expect(productsModel.list()).to.eventually.deep.equal(result);
+    });
+    it('should be rejected when db.query is rejected', () => {
+      sinon.stub(db, 'query').rejects();
+      return expect(productsModel.list()).to.eventually.be.rejected;
     });
   });
 
