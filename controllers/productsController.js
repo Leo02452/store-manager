@@ -11,6 +11,11 @@ const productsController = {
     const product = await productsService.getById(id);
     res.status(200).json(product);
   },
+  async getByName(req, res) {
+    const { q } = req.query;
+    const products = await productsService.getByName(q);
+    res.status(200).json(products);
+  },
   async add(req, res) {
     const { name } = await productsService.validateBodyAdd(req.body);
     const product = await productsService.add(name);
