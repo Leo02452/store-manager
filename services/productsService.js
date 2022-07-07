@@ -21,8 +21,8 @@ const productsService = {
     return products;
   },
   async checkIfExists(id) {
-    const exists = await productsModel.exists(id);
-    if (!exists.length) {
+    const exists = await productsModel.getById(id);
+    if (!exists) {
       throw new NotFoundError('Product not found');
     }
   },

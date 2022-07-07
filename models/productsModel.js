@@ -16,11 +16,6 @@ const productsModel = {
     const [products] = await db.query(query, [`%${searchTerm}%`]);
     return products;
   },
-  async exists(id) {
-    const query = 'SELECT 1 FROM StoreManager.products WHERE id = ?';
-    const [product] = await db.query(query, [id]);
-    return product;
-  },
   async add(name) {
     const query = 'INSERT INTO StoreManager.products (name) VALUES (?)';
     const [{ insertId }] = await db.query(query, [name]);
