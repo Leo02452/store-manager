@@ -36,31 +36,22 @@ const salesModel = {
     return sale;
   },
   async add(sales) {
-    const firstInsertQuery = `
+    const salesTableQuery = `
       INSERT INTO
         StoreManager.sales (date)
       VALUES (NOW());
       `;
-    const [{ insertId }] = await db.query(firstInsertQuery);
-    const secondInsertQuery = sales.map(({ productId, quantity }) => `
-        INSERT INTO
-          StoreManager.sales_products (sale_id, product_id, quantity)
-        VALUES (${insertId}, ${productId}, ${quantity});
-      `);
-    await Promise.all(secondInsertQuery);
-    return insertId;
-  },
-  async update(quantity, saleId, productId) {
-    const query = `
-      UPDATE
-        StoreManager.sales_products
-      SET
-        quantity = ?
-      WHERE
-        sale_id = ?
-        AND product_id = ?;
+    const [{ insertId }] = await db.query(salesTableQuery);
+
+    const salesProductsTableQuery = `
+      INSERT INTO
+        StoreManager.sales_products (sale_id, product_id, quantity)
+      VALUES ?;
     `;
-    await db.query(query, [quantity, saleId, productId]);
+    
+    await db.query(salesProductsTableQuery, [sales
+      .map(({ productId, quantity }) => [insertId, productId, quantity])]);
+    return insertId;  
   },
   async remove(id) {
     const query = `
