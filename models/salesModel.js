@@ -1,6 +1,11 @@
 const db = require('./db');
 
 const salesModel = {
+  async exists(id) {
+    const query = 'SELECT 1 FROM StoreManager.sales WHERE id = ?';
+    const [sale] = await db.query(query, [id]);
+    return sale;
+  },
   async list() {
     const query = `
       SELECT 
@@ -27,11 +32,6 @@ const salesModel = {
       WHERE
         sp.sale_id = ?;
     `;
-    const [sale] = await db.query(query, [id]);
-    return sale;
-  },
-  async exists(id) {
-    const query = 'SELECT 1 FROM StoreManager.sales WHERE id = ?';
     const [sale] = await db.query(query, [id]);
     return sale;
   },

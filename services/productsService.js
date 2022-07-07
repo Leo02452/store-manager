@@ -7,6 +7,13 @@ const productsService = {
   validateBody: runSchema(Joi.object({
     name: Joi.string().required().min(5),
   })),
+  
+  async checkIfExists(id) {
+    const exists = await productsModel.getById(id);
+    if (!exists) {
+      throw new NotFoundError('Product not found');
+    }
+  },
 
   async list() {
     const productsList = await productsModel.list();
@@ -19,12 +26,6 @@ const productsService = {
   async getByName(searchTerm) {
     const products = await productsModel.getByName(searchTerm);
     return products;
-  },
-  async checkIfExists(id) {
-    const exists = await productsModel.getById(id);
-    if (!exists) {
-      throw new NotFoundError('Product not found');
-    }
   },
   async add(name) {
     const productId = await productsModel.add(name);

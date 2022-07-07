@@ -9,6 +9,13 @@ const salesService = {
     productId: Joi.number().required(),
   })),
 
+  async checkIfExists(id) {
+    const exists = await salesModel.exists(id);
+    if (!exists.length) {
+      throw new NotFoundError('Sale not found');
+    }
+  },
+
   async list() {
     const salesList = await salesModel.list();
     return salesList;
@@ -16,12 +23,6 @@ const salesService = {
   async getById(id) {
     const sale = await salesModel.getById(id);
     return sale;
-  },
-  async checkIfExists(id) {
-    const exists = await salesModel.exists(id);
-    if (!exists.length) {
-      throw new NotFoundError('Sale not found');
-    }
   },
   async add(sales) {
     const saleId = await salesModel.add(sales);
