@@ -17,12 +17,15 @@ const salesService = {
     const sale = await salesModel.getById(id);
     return sale;
   },
+  async checkIfExists(id) {
+    const exists = await salesModel.exists(id);
+    if (!exists.length) {
+      throw new NotFoundError('Sale not found');
+    }
+  },
   async add(sales) {
     const saleId = await salesModel.add(sales);
     return { id: saleId, itemsSold: sales };
-  },
-  async remove(id) {
-    await salesModel.remove(id);
   },
   async update(saleId, saleToUpdate) {
     const promises = saleToUpdate
@@ -30,11 +33,8 @@ const salesService = {
     await Promise.all(promises);  
     return { saleId, itemsUpdated: saleToUpdate };
   },
-  async checkIfExists(id) {
-    const exists = await salesModel.exists(id);
-    if (!exists.length) {
-      throw new NotFoundError('Sale not found');
-    }
+  async remove(id) {
+    await salesModel.remove(id);
   },
 };
 

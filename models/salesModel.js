@@ -30,6 +30,11 @@ const salesModel = {
     const [sale] = await db.query(query, [id]);
     return sale;
   },
+  async exists(id) {
+    const query = 'SELECT 1 FROM StoreManager.sales WHERE id = ?';
+    const [sale] = await db.query(query, [id]);
+    return sale;
+  },
   async add(sales) {
     const firstInsertQuery = `
       INSERT INTO
@@ -45,15 +50,6 @@ const salesModel = {
     await Promise.all(secondInsertQuery);
     return insertId;
   },
-  async remove(id) {
-    const query = `
-      DELETE FROM
-        StoreManager.sales
-      WHERE
-        id = ?;
-    `;
-    await db.query(query, [id]);
-  },
   async update(quantity, saleId, productId) {
     const query = `
       UPDATE
@@ -64,13 +60,16 @@ const salesModel = {
         sale_id = ?
         AND product_id = ?;
     `;
-    const [{ affectedRows }] = await db.query(query, [quantity, saleId, productId]);
-    return affectedRows;
+    await db.query(query, [quantity, saleId, productId]);
   },
-  async exists(id) {
-    const query = 'SELECT 1 FROM StoreManager.sales WHERE id = ?';
-    const [sale] = await db.query(query, [id]);
-    return sale;
+  async remove(id) {
+    const query = `
+      DELETE FROM
+        StoreManager.sales
+      WHERE
+        id = ?;
+    `;
+    await db.query(query, [id]);
   },
 };
 
