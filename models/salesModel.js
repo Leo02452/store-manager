@@ -53,6 +53,18 @@ const salesModel = {
       .map(({ productId, quantity }) => [insertId, productId, quantity])]);
     return insertId;  
   },
+  async update(quantity, saleId, productId) {
+    const query = `
+      UPDATE
+        StoreManager.sales_products
+      SET
+        quantity = ?
+      WHERE
+        sale_id = ?
+        AND product_id = ?;
+    `;
+    await db.query(query, [quantity, saleId, productId]);
+  },
   async remove(id) {
     const query = `
       DELETE FROM
