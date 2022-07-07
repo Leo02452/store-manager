@@ -4,13 +4,15 @@ const productsService = require('../services/productsService');
 const salesController = {
   async list(_req, res) {
     const salesList = await salesService.list();
+
     res.status(200).json(salesList);
   },
-
   async getById(req, res) {
     const { id } = req.params;
+
     await salesService.checkIfExists(id);
     const sales = await salesService.getById(id);
+
     res.status(200).json(sales);
   },
   async add(req, res) {
@@ -24,12 +26,15 @@ const salesController = {
     await Promise.all(promises);
 
     const saleInfo = await salesService.add(sales);
+
     res.status(201).json(saleInfo);
   },
   async remove(req, res) {
     const { id } = req.params;
+
     await salesService.checkIfExists(id);
     await salesService.remove(id);
+
     res.status(204).end();
   },
   async update(req, res) {
@@ -45,6 +50,7 @@ const salesController = {
     await Promise.all(checkPromises);
 
     const updatedSale = await salesService.update(id, sales);
+
     res.status(200).json(updatedSale);
   },
 };
