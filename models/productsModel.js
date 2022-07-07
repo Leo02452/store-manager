@@ -11,6 +11,11 @@ const productsModel = {
     const [[product]] = await db.query(query, [id]);
     return product;
   },
+  async getByName(searchTerm) {
+    const query = 'SELECT * FROM StoreManager.products WHERE name LIKE ?';
+    const [products] = await db.query(query, [`%${searchTerm}%`]);
+    return products;
+  },
   async add(name) {
     const query = 'INSERT INTO StoreManager.products (name) VALUES (?)';
     const [{ insertId }] = await db.query(query, [name]);
