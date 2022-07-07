@@ -24,6 +24,12 @@ const salesService = {
   async remove(id) {
     await salesModel.remove(id);
   },
+  async update(saleId, saleToUpdate) {
+    const promises = saleToUpdate
+      .map(({ productId, quantity }) => salesModel.update(quantity, saleId, productId));
+    await Promise.all(promises);  
+    return { saleId, itemsUpdated: saleToUpdate };
+  },
   async checkIfExists(id) {
     const exists = await salesModel.exists(id);
     if (!exists.length) {
