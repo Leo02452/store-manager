@@ -1,4 +1,5 @@
 const express = require('express');
+const errorMiddleware = require('./middlewares/errorMiddleware');
 require('express-async-errors');
 const productsRouter = require('./routes/productsRouter');
 const salesRouter = require('./routes/salesRouter');
@@ -12,21 +13,8 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/products', productsRouter);
-
 app.use('/sales', salesRouter);
-
-app.use((err, _req, res, _next) => {
-  switch (err.name) {
-    case 'NotFoundError':
-      res.status(404).json({ message: err.message });
-      break;
-    case 'ValidationError':
-      res.status(err.code).json({ message: err.message });
-      break;
-    default:
-      res.status(500).json({ message: err.message });
-  }
-});
+app.use(errorMiddleware);
 
 // não remova essa exportação, é para o avaliador funcionar
 // você pode registrar suas rotas normalmente, como o exemplo acima
