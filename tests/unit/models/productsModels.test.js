@@ -35,25 +35,16 @@ describe('models/productsModel', () => {
   });
 
   describe('getById', () => {
-    it('should return a object', async () => {
+    it('should return an object when db.query returns an object', () => {
       const result = { "id": 1, "name": "Martelo de Thor" };
+
       sinon.stub(db, 'query').resolves([[result]]);
 
-      const product = await productsModel.getById(1);
-      expect(product).to.be.a('object');
+      return expect(productsModel.getById(1)).to.eventually.deep.equal(result);
     });
-    it('should object have a property id', async () => {
-      const result = { "id": 1, "name": "Martelo de Thor" };
-      sinon.stub(db, 'query').resolves([[result]]);
-      const product = await productsModel.getById(1);
-      expect(product).to.have.a.property('id');
-    });
-    it('should object have a property name', async () => {
-      const result = { "id": 1, "name": "Martelo de Thor" };
-      sinon.stub(db, 'query').resolves([[result]]);
-      const product = await productsModel.getById(1);
-      expect(product).to.have.a.property('name');
-      expect(product.name).to.be.equal('Martelo de Thor');
+    it('should be rejected when db.query is rejected', () => {
+      sinon.stub(db, 'query').rejects();
+      return expect(productsModel.getById()).to.eventually.be.rejected;
     });
   });
   describe('add', () => {
