@@ -1,8 +1,10 @@
-const { expect } = require('chai');
+const { expect, use } = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 const productsModel = require('../../../models/productsModel');
 const db = require('../../../models/db');
 
+use(chaiAsPromised);
 
 describe('models/productsModel', () => {
   beforeEach(sinon.restore);
@@ -47,13 +49,16 @@ describe('models/productsModel', () => {
       return expect(productsModel.getById()).to.eventually.be.rejected;
     });
   });
-  describe('add', () => {
-    it('should return a number', async () => {
-      const insertId = 4;
-      sinon.stub(db, 'query').resolves([{ insertId }]);
 
-      const product = await productsModel.add({ "name": "Cinto do Batman" });
-      expect(product).to.be.a('number');
+  describe('add', () => {
+    it('should return an id when db.query returns an id', () => {
+      sinon.stub(db, 'query').resolves([{ insertId: 4 }]);
+
+      return expect(productsModel.add({ name: "Capa do Dr. Estranho" })).to.eventually.deep.equal(4);
+    });
+    it('should be rejected when db.query is rejected', () => {
+      sinon.stub(db, 'query').rejects();
+      return expect(productsModel.add({ name: "Capa do Dr. Estranho" })).to.eventually.be.rejected;
     });
   });
   describe('update', () => {
