@@ -62,12 +62,14 @@ describe('models/productsModel', () => {
     });
   });
   describe('update', () => {
-    it('should return a number', async () => {
-      const affectedRows = 1;
-      sinon.stub(db, 'query').resolves([{ affectedRows }]);
+    it('should return nothing in successfully case', async () => {
+      sinon.stub(db, 'query').resolves();
 
-      const result = await productsModel.update(1, "Traje do pantera");
-      expect(result).to.be.equal(true);
+      return expect(productsModel.update(1, "Traje do pantera")).to.eventually.be.undefined;
+    });
+    it('should be rejected when db.query is rejected', () => {
+      sinon.stub(db, 'query').rejects();
+      return expect(productsModel.update(1, "Traje do pantera")).to.eventually.be.rejected;
     });
   });
 });
