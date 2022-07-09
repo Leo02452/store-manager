@@ -6,7 +6,7 @@ const db = require('../../../models/db');
 
 use(chaiAsPromised);
 
-describe.only('models/productsModel', () => {
+describe('models/productsModel', () => {
   beforeEach(sinon.restore);
 
   describe('list', () => {
