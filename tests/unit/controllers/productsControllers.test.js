@@ -6,18 +6,19 @@ const productsController = require('../../../controllers/productsController');
 
 use(chaiAsPromised);
 
-beforeEach(() => {
-  sinon.restore();
-});
-
 describe('controllers/productsController', () => {
-  describe('list', () => {
-    it('should return status code 200 and a list of products', async () => {
-      const req = {};
-      const res = {};
+  beforeEach(sinon.restore);
 
-      res.status = sinon.stub().returns(res);
-      res.json = sinon.stub();
+  describe('list', () => {
+    it('should be rejected when productsService.list is rejected', () => {
+      sinon.stub(productsService, 'list').rejects();
+      return expect(productsController.getById({}, {})).to.eventually.be.rejected;
+    });
+    it('should return status code 200 and a list of products', async () => {
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      };
 
       const result = [
         {
@@ -35,80 +36,156 @@ describe('controllers/productsController', () => {
       ];
 
       sinon.stub(productsService, 'list').resolves(result);
-      await productsController.list(req, res);
+      await productsController.list({}, res);
 
-      expect(res.status.calledWith(200)).to.be.equal(true);
-      expect(res.json.calledWith(result)).to.be.equal(true);
+      expect(res.status.getCall(0).args[0]).to.equal(200);
+      expect(res.json.getCall(0).args[0]).to.deep.equal(result);
     });
   });
+
   describe('getById', () => {
-    it('should return status code 200 when id is valid', async () => {
-      const req = {};
-      const res = {};
+    it('should be rejected when productsService.checkIfExists is rejected', () => {
+      sinon.stub(productsService, 'checkIfExists').rejects();
+      return expect(productsController.getById({}, {})).to.eventually.be.rejected;
+    });
+    it('should be rejected when productsService.getById is rejected', () => {
+      sinon.stub(productsService, 'checkIfExists').resolves();
+      sinon.stub(productsService, 'getById').rejects();
+      return expect(productsController.getById({}, {})).to.eventually.be.rejected;
+    });
+    it('should return status code 200 and the product', async () => {
+      const req = {
+        params: { id: 1 },
+      };
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      };
 
-      res.status = sinon.stub().returns(res);
-      res.json = sinon.stub();
-
-      req.params = { id: 1 };
-
+      sinon.stub(productsService, 'checkIfExists').resolves();
       sinon.stub(productsService, 'getById').resolves({ "id": 1, "name": "Martelo de Thor" });
-      await productsController.getById(req, res);
 
-      expect(res.status.calledWith(200)).to.be.equal(true);
-      expect(res.json.calledWith({ "id": 1, "name": "Martelo de Thor" })).to.be.equal(true);
+      await productsController.getById(req, res);
+      expect(res.status.getCall(0).args[0]).to.equal(200);
+      expect(res.json.getCall(0).args[0]).to.deep.equal({ "id": 1, "name": "Martelo de Thor" });
     });
   });
+
+  describe('getByName', () => {
+    it('should be rejected when productsService.getByName is rejected', () => {
+      sinon.stub(productsService, 'getByName').rejects();
+      return expect(productsController.getByName({}, {})).to.eventually.be.rejected;
+    });
+    it('should return status code 200 and a filtered list of products', async () => {
+      const req = {
+        query: { q: "Martelo" },
+      };
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      };
+
+      sinon.stub(productsService, 'getByName').resolves([{ "id": 1, "name": "Martelo de Thor" }]);
+
+      await productsController.getByName(req, res);
+      expect(res.status.getCall(0).args[0]).to.equal(200);
+      expect(res.json.getCall(0).args[0]).to.deep.equal([{ "id": 1, "name": "Martelo de Thor" }]);
+    });
+  });
+
   describe('add', () => {
-    it('should return status code 201 when name is valid', async () => {
-      const req = {};
-      const res = {};
+    it('should be rejected when productsService.validateBody is rejected', () => {
+      sinon.stub(productsService, 'validateBody').rejects();
+      return expect(productsController.add({}, {})).to.eventually.be.rejected;
+    });
+    it('should be rejected when productsService.add is rejected', () => {
+      sinon.stub(productsService, 'validateBody').resolves();
+      sinon.stub(productsService, 'add').rejects();
+      return expect(productsController.add({}, {})).to.eventually.be.rejected;
+    });
+    it('should return status code 201 and new product', async () => {
+      const req = {
+        body: { name: "Manopla do Thanos" },
+      };
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      };
 
-      res.status = sinon.stub().returns(res);
-      res.json = sinon.stub();
+      const newProduct = { id: 4, name: "Manopla do Thanos" };
 
-      req.body = { "name": "Cinto do Batman" };
-
-      const createdProduct = { "id": 4, "name": "Cinto do Batman" };
-      sinon.stub(productsService, 'add').resolves(createdProduct);
+      sinon.stub(productsService, 'validateBody').resolves();
+      sinon.stub(productsService, 'add').resolves(newProduct);
 
       await productsController.add(req, res);
-
-      expect(res.status.calledWith(201)).to.be.equal(true);
-      expect(res.json.calledWith({ "id": 4, "name": "Cinto do Batman" })).to.be.equal(true);
+      expect(res.status.getCall(0).args[0]).to.equal(201);
+      expect(res.json.getCall(0).args[0]).to.deep.equal(newProduct);
     });
-  //   it('422 when name is less than 5 characters', async () => {
-  //     const req = {};
-  //     const res = {};
-
-  //     res.status = sinon.stub().returns(res);
-  //     res.json = sinon.stub();
-
-  //     req.body = { "name": "Céu" };
-
-  //     // const createdProduct = { "id": 4, "name": "Cinto do Batman" };
-  //     // sinon.stub(productsService, 'add').resolves(createdProduct);
-
-  //     return expect(productsController.add(req, res)).to.be.rejectedWith('ValidationError');
-  //   });
   });
+
   describe('update', () => {
-    it('should return status code 200 when name is valid', async () => {
-      const req = {};
-      const res = {};
-
-      res.status = sinon.stub().returns(res);
-      res.json = sinon.stub();
-
-      req.params = { "id": 1 }
-      req.body = { "name": "Traje do Pantera" };
-      const updatedProduct = { "id": 1, "name": "Traje do Pantera" };
-
+    it('should be rejected when productsService.validateBody is rejected', () => {
+      sinon.stub(productsService, 'validateBody').rejects();
+      return expect(productsController.update({}, {})).to.eventually.be.rejected;
+    });
+    it('should be rejected when productsService.checkIfExists is rejected', () => {
+      sinon.stub(productsService, 'validateBody').resolves();
+      sinon.stub(productsService, 'checkIfExists').rejects();
+      return expect(productsController.update({}, {})).to.eventually.be.rejected;
+    });
+    it('should be rejected when productsService.update is rejected', () => {
+      sinon.stub(productsService, 'validateBody').resolves();
+      sinon.stub(productsService, 'checkIfExists').resolves();
+      sinon.stub(productsService, 'update').rejects();
+      return expect(productsController.update({}, {})).to.eventually.be.rejected;
+    });
+    it('should return status code 200 and updated product', async () => {
+      const req = {
+        body: { name: "Traje do Pantera" },
+        params: { id: 1 },
+      };
+      const res = {
+        status: sinon.stub().callsFake(() => res),
+        json: sinon.stub().returns(),
+      };
+      
+      const updatedProduct = { id: 1, name: "Traje do Pantera" };
+      
+      sinon.stub(productsService, 'validateBody').resolves();
+      sinon.stub(productsService, 'checkIfExists').resolves();
       sinon.stub(productsService, 'update').resolves(updatedProduct);
 
       await productsController.update(req, res);
+      expect(res.status.getCall(0).args[0]).to.equal(200);
+      expect(res.json.getCall(0).args[0]).to.deep.equal(updatedProduct);
+    });
+  });
 
-      expect(res.status.calledWith(200)).to.be.equal(true);
-      expect(res.json.calledWith(updatedProduct)).to.be.equal(true);
+  describe('remove', () => {
+    it('should be rejected when productsService.checkIfExists is rejected', () => {
+      sinon.stub(productsService, 'checkIfExists').rejects();
+      return expect(productsController.remove({}, {})).to.eventually.be.rejected;
+    });
+    it('should be rejected when productsService.remove is rejected', () => {
+      sinon.stub(productsService, 'checkIfExists').resolves();
+      sinon.stub(productsService, 'remove').rejects();
+      return expect(productsController.remove({}, {})).to.eventually.be.rejected;
+    });
+    it('should return status code 204', async () => {
+      sinon.stub(productsService, 'checkIfExists').resolves();
+      sinon.stub(productsService, 'remove').resolves();
+
+      const req = {
+        params: {
+          id: 1
+        },
+      };
+      const res = {
+        sendStatus: sinon.stub().returns(),
+      };
+
+      await productsController.remove(req, res);
+      expect(res.sendStatus.getCall(0).args[0]).to.equal(204);
     });
   });
 });

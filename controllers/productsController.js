@@ -44,7 +44,7 @@ const productsController = {
     await productsService.checkIfExists(id);
     await productsService.remove(id);
 
-    res.status(204).end();
+    res.sendStatus(204);
   },
 };
 

@@ -28,14 +28,6 @@ const salesController = {
 
     res.status(201).json(saleInfo);
   },
-  async remove(req, res) {
-    const { id } = req.params;
-
-    await salesService.checkIfExists(id);
-    await salesService.remove(id);
-
-    res.status(204).end();
-  },
   async update(req, res) {
     const { id } = req.params;
     const sales = req.body;
@@ -50,6 +42,14 @@ const salesController = {
     const updatedSale = await salesService.update(id, sales);
 
     res.status(200).json(updatedSale);
+  },
+  async remove(req, res) {
+    const { id } = req.params;
+
+    await salesService.checkIfExists(id);
+    await salesService.remove(id);
+
+    res.status(204).end();
   },
 };
 
