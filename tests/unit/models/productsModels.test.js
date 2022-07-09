@@ -61,6 +61,7 @@ describe.only('models/productsModel', () => {
       return expect(productsModel.add("Capa do Dr. Estranho")).to.eventually.be.rejected;
     });
   });
+
   describe('update', () => {
     it('should return nothing in successfully case', async () => {
       sinon.stub(db, 'query').resolves();
@@ -70,6 +71,18 @@ describe.only('models/productsModel', () => {
     it('should be rejected when db.query is rejected', () => {
       sinon.stub(db, 'query').rejects();
       return expect(productsModel.update(1, "Traje do pantera")).to.eventually.be.rejected;
+    });
+  });
+
+  describe('remove', () => {
+    it('should return nothing in successfully case', async () => {
+      sinon.stub(db, 'query').resolves();
+
+      return expect(productsModel.remove(1)).to.eventually.be.undefined;
+    });
+    it('should be rejected when db.query is rejected', () => {
+      sinon.stub(db, 'query').rejects();
+      return expect(productsModel.remove(1)).to.eventually.be.rejected;
     });
   });
 });
