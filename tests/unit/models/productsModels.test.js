@@ -6,7 +6,7 @@ const db = require('../../../models/db');
 
 use(chaiAsPromised);
 
-describe('models/productsModel', () => {
+describe.only('models/productsModel', () => {
   beforeEach(sinon.restore);
 
   describe('list', () => {
@@ -54,11 +54,11 @@ describe('models/productsModel', () => {
     it('should return an id when db.query returns an id', () => {
       sinon.stub(db, 'query').resolves([{ insertId: 4 }]);
 
-      return expect(productsModel.add({ name: "Capa do Dr. Estranho" })).to.eventually.deep.equal(4);
+      return expect(productsModel.add("Capa do Dr. Estranho")).to.eventually.deep.equal(4);
     });
     it('should be rejected when db.query is rejected', () => {
       sinon.stub(db, 'query').rejects();
-      return expect(productsModel.add({ name: "Capa do Dr. Estranho" })).to.eventually.be.rejected;
+      return expect(productsModel.add("Capa do Dr. Estranho")).to.eventually.be.rejected;
     });
   });
   describe('update', () => {
