@@ -12,7 +12,7 @@ describe('controllers/productsController', () => {
   describe('list', () => {
     it('should be rejected when productsService.list is rejected', () => {
       sinon.stub(productsService, 'list').rejects();
-      return expect(productsController.getById({}, {})).to.eventually.be.rejected;
+      return expect(productsController.list({}, {})).to.eventually.be.rejected;
     });
     it('should return status code 200 and a list of products', async () => {
       const res = {
