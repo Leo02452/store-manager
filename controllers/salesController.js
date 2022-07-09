@@ -49,7 +49,7 @@ const salesController = {
     await salesService.checkIfExists(id);
     await salesService.remove(id);
 
-    res.status(204).end();
+    res.sendStatus(204);
   },
 };
 
