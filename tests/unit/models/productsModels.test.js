@@ -46,7 +46,21 @@ describe.only('models/productsModel', () => {
     });
     it('should be rejected when db.query is rejected', () => {
       sinon.stub(db, 'query').rejects();
-      return expect(productsModel.getById()).to.eventually.be.rejected;
+      return expect(productsModel.getById(1)).to.eventually.be.rejected;
+    });
+  });
+
+  describe('getByName', () => {
+    it('should return a filtered list when db.query returns a filtered list', () => {
+      const result = [{ "id": 1, "name": "Martelo de Thor" }];
+
+      sinon.stub(db, 'query').resolves([result]);
+
+      return expect(productsModel.getByName('Martelo')).to.eventually.deep.equal(result);
+    });
+    it('should be rejected when db.query is rejected', () => {
+      sinon.stub(db, 'query').rejects();
+      return expect(productsModel.getByName('Martelo')).to.eventually.be.rejected;
     });
   });
 
