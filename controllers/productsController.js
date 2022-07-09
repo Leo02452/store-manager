@@ -22,14 +22,14 @@ const productsController = {
     res.status(200).json(products);
   },
   async add(req, res) {
-    const { name } = await productsService.validateBody(req.body);
+    const { name } = productsService.validateBody(req.body);
 
     const product = await productsService.add(name);
 
     res.status(201).json(product);
   },
   async update(req, res) {
-    const { name } = await productsService.validateBody(req.body);
+    const { name } = productsService.validateBody(req.body);
     const { id } = req.params;
 
     await productsService.checkIfExists(id);
