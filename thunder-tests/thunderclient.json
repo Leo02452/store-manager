@@ -1,0 +1,154 @@
+[
+  {
+    "_id": "76773e04-8223-4a5b-bb0c-3f5dc8eccde2",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "all /products",
+    "url": "localhost:3000/products",
+    "method": "GET",
+    "sortNum": 10000,
+    "created": "2022-06-29T18:42:12.643Z",
+    "modified": "2022-06-29T23:43:18.091Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "5b736f1a-512b-4c00-98ab-93308f15c667",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "/product by id",
+    "url": "localhost:3000/products/88",
+    "method": "GET",
+    "sortNum": 20000,
+    "created": "2022-06-29T23:42:28.657Z",
+    "modified": "2022-06-30T17:17:59.211Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "c37861f9-35da-4e5e-8e90-1f4fec5c5c31",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "/products",
+    "url": "localhost:3000/products",
+    "method": "POST",
+    "sortNum": 30000,
+    "created": "2022-07-01T17:46:42.031Z",
+    "modified": "2022-07-01T18:43:56.220Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{ \"chave\": \"chave\" }",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "dcf1f346-d98a-492c-ac5f-8c7c883bd2d9",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "/product by id",
+    "url": "localhost:3000/products/1",
+    "method": "PUT",
+    "sortNum": 40000,
+    "created": "2022-07-01T22:16:17.799Z",
+    "modified": "2022-07-01T22:17:11.603Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "{\n    \"name\": \"Martelo do Batman\"\n}",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "3419db32-1e0f-4f6b-b0c1-edef0c8841c2",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "all /sales",
+    "url": "localhost:3000/sales",
+    "method": "GET",
+    "sortNum": 50000,
+    "created": "2022-07-04T22:53:36.757Z",
+    "modified": "2022-07-04T22:54:12.531Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "e93ae602-50d8-4f5a-b25a-b5111207525e",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "/sales by id",
+    "url": "localhost:3000/sales/1",
+    "method": "GET",
+    "sortNum": 60000,
+    "created": "2022-07-05T17:20:54.849Z",
+    "modified": "2022-07-05T17:22:36.010Z",
+    "headers": [],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "0cbb9e72-a806-482f-bc8e-a3bed696aa5f",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "/sales",
+    "url": "localhost:3000/sales",
+    "method": "POST",
+    "sortNum": 70000,
+    "created": "2022-07-05T20:49:07.090Z",
+    "modified": "2022-07-05T23:54:34.361Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "[\n  {\"productId\":1,\"quantity\":1},\n  {\"productId\":2,\"quantity\":5}\n]",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "881d14c6-226e-4079-b03d-07bba719fe6f",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "/sales by id",
+    "url": "localhost:3000/sales/1",
+    "method": "PUT",
+    "sortNum": 80000,
+    "created": "2022-07-06T23:06:33.426Z",
+    "modified": "2022-07-06T23:08:46.259Z",
+    "headers": [],
+    "params": [],
+    "body": {
+      "type": "json",
+      "raw": "[\n  {\"productId\":1,\"quantity\":1},\n  {\"productId\":2,\"quantity\":5}\n]",
+      "form": []
+    },
+    "tests": []
+  },
+  {
+    "_id": "89a57bf8-51f0-4dfa-b71f-6d186cb4a11d",
+    "colId": "d9ef9e4c-c6d7-44a3-983f-543f79a27d5e",
+    "containerId": "",
+    "name": "/products by name",
+    "url": "localhost:3000/products/search?q=Martelo",
+    "method": "GET",
+    "sortNum": 90000,
+    "created": "2022-07-07T00:24:22.241Z",
+    "modified": "2022-07-07T00:27:22.364Z",
+    "headers": [],
+    "params": [
+      {
+        "name": "q",
+        "value": "Martelo",
+        "isPath": false
+      }
+    ],
+    "tests": []
+  }
+]
