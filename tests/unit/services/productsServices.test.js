@@ -4,7 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 const productsModel = require('../../../models/productsModel');
 const productsService = require('../../../services/productsService');
 const NotFoundError = require('../../../services/notFoundError');
-// const { ValidationError } = require('joi');
+const { ValidationError } = require('joi');
 
 use(chaiAsPromised);
 
@@ -17,9 +17,18 @@ describe('services/productsService', () => {
 
       expect(productsService.validateBody(validBody)).to.be.deep.equal(validBody);
     });
-    // it('should thrown an error if the body is empty', () => {
-    //   return expect(productsService.validateBody({})).to.eventually.be.rejectedWith(ValidationError);
-    // });
+    it('should thrown an error if body is empty', () => {
+      return expect(() => productsService.validateBody({})).to.throw(ValidationError);
+    });
+    it('should thrown an error if name is empty', () => {
+      return expect(() => productsService.validateBody({ name: '' })).to.throw(ValidationError);
+    });
+    it('should thrown an error if name is less than 5 characters', () => {
+      return expect(() => productsService.validateBody({ name: 'Capa' })).to.throw(ValidationError);
+    });
+    it('should thrown an error if name is not a string', () => {
+      return expect(() => productsService.validateBody({ name: 1 })).to.throw(ValidationError);
+    });
   });
 
   describe('checkIfExists', () => {

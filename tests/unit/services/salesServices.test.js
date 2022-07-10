@@ -4,7 +4,7 @@ const chaiAsPromised = require('chai-as-promised');
 const salesModel = require('../../../models/salesModel');
 const salesService = require('../../../services/salesService');
 const NotFoundError = require('../../../services/notFoundError');
-// const { ValidationError } = require('joi');
+const { ValidationError } = require('joi');
 
 use(chaiAsPromised);
 
@@ -13,13 +13,28 @@ describe('services/salesService', () => {
 
   describe('validateBody', () => {
     it('should return the body when the body is valid', () => {
-      const validBody = { productId: 1, quantity: 10 };
+      const validBody = { quantity: 10, productId: 1 };
 
       expect(salesService.validateBody(validBody)).to.be.deep.equal(validBody);
     });
-    // it('should thrown an error if the body is empty', () => {
-    //   return expect(salesService.validateBody({})).to.eventually.be.rejectedWith(ValidationError);
-    // });
+    it('should thrown an error if body is empty', () => {
+      return expect(() => salesService.validateBody({})).to.throw(ValidationError);
+    });
+    it('should thrown an error if quantity is empty', () => {
+      return expect(() => salesService.validateBody({ quantity: '', productId: 1 })).to.throw(ValidationError);
+    });
+    it('should thrown an error if productId is empty', () => {
+      return expect(() => salesService.validateBody({ quantity: 5, productId: '' })).to.throw(ValidationError);
+    });
+    it('should thrown an error if quantity is less than 1', () => {
+      return expect(() => salesService.validateBody({ quantity: 0, productId: 1 })).to.throw(ValidationError);
+    });
+    it('should thrown an error if quantity is not a number', () => {
+      return expect(() => salesService.validateBody({ quantity: 'two', productId: 1 })).to.throw(ValidationError);
+    });
+    it('should thrown an error if productId is not a number', () => {
+      return expect(() => salesService.validateBody({ quantity: 5, productId: 'one' })).to.throw(ValidationError);
+    });
   });
 
   describe('checkIfExists', () => {
